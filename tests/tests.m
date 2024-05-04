@@ -33,7 +33,7 @@
 OF_APPLICATION_DELEGATE(TestApp)
 
 @implementation TestApp
-- (void)applicationDidFinishLaunching
+- (void)applicationDidFinishLaunching: (OFNotification *)notification
 {
 	IRCConnection *connection = [[IRCConnection alloc] init];
 

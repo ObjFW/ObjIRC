@@ -25,14 +25,7 @@
 
 #include <stdarg.h>
 
-#import <ObjFW/OFString.h>
-#import <ObjFW/OFArray.h>
-#import <ObjFW/OFMutableDictionary.h>
-#import <ObjFW/OFTCPSocket.h>
-
-#import <ObjFW/OFInvalidEncodingException.h>
-
-#import <ObjFW/macros.h>
+#import <ObjFW/ObjFW.h>
 
 #import "IRCConnection.h"
 #import "IRCUser.h"
@@ -91,7 +84,7 @@
 	void *pool = objc_autoreleasePoolPush();
 
 	if (_socket != nil)
-		@throw [OFAlreadyConnectedException exception];
+		@throw [OFAlreadyOpenException exceptionWithObject: self];
 
 	_socket = [[_socketClass alloc] init];
 	[_socket setDelegate: self];
@@ -256,10 +249,10 @@
 	components = [line componentsSeparatedByString: @" "];
 
 	/* PING */
-	if ([components count] == 2 &&
-	    [[components firstObject] isEqual: @"PING"]) {
+	if (components.count == 2 &&
+	    [components.firstObject isEqual: @"PING"]) {
 		OFMutableString *s = [[line mutableCopy] autorelease];
-		[s replaceCharactersInRange: OFRangeMake(0, 4)
+		[s replaceCharactersInRange: OFMakeRange(0, 4)
 				 withString: @"PONG"];
 		[self sendLine: s];
 
@@ -302,7 +295,7 @@
 		IRCUser *user;
 		OFMutableSet *channel;
 
-		who = [who substringWithRange: OFRangeMake(1, who.length - 1)];
+		who = [who substringFromIndex: 1];
 		user = [IRCUser IRCUserWithString: who];
 
 		if ([who hasPrefix:
@@ -344,14 +337,13 @@
 		    [[components objectAtIndex: 4] length] + 6;
 
 		users = [[line substringWithRange:
-		    OFRangeMake(pos, line.length - pos)]
+		    OFMakeRange(pos, line.length - pos)]
 		    componentsSeparatedByString: @" "];
 
 		for (OFString *user in users) {
 			if ([user hasPrefix: @"@"] || [user hasPrefix: @"+"] ||
 			    [user hasPrefix: @"%"] || [user hasPrefix: @"*"])
-				user = [user substringWithRange:
-				    OFRangeMake(1, user.length - 1)];
+				user = [user substringFromIndex: 1];
 
 			[channel addObject: user];
 		}
@@ -374,13 +366,12 @@
 		size_t pos = who.length + 1 +
 		    [[components objectAtIndex: 1] length] + 1 + where.length;
 
-		who = [who substringWithRange: OFRangeMake(1, who.length - 1)];
+		who = [who substringFromIndex: 1];
 		user = [IRCUser IRCUserWithString: who];
 		channel = [_channels objectForKey: where];
 
 		if (components.count > 3)
-			reason = [line substringWithRange:
-			    OFRangeMake(pos + 2, line.length - pos - 2)];
+			reason = [line substringFromIndex: pos + 2];
 
 		[channel removeObject: user.nickname];
 
@@ -406,13 +397,12 @@
 		    [[components objectAtIndex: 1] length] + 1 +
 		    where.length + 1 + whom.length;
 
-		who = [who substringWithRange: OFRangeMake(1, who.length - 1)];
+		who = [who substringFromIndex: 1];
 		user = [IRCUser IRCUserWithString: who];
 		channel = [_channels objectForKey: where];
 
-		if ([components count] > 4)
-			reason = [line substringWithRange:
-			    OFRangeMake(pos + 2, line.length - pos - 2)];
+		if (components.count > 4)
+			reason = [line substringFromIndex: pos + 2];
 
 		[channel removeObject: user.nickname];
 
@@ -435,12 +425,11 @@
 		size_t pos = who.length + 1 +
 		    [[components objectAtIndex: 1] length];
 
-		who = [who substringWithRange: OFRangeMake(1, who.length - 1)];
+		who = [who substringFromIndex: 1];
 		user = [IRCUser IRCUserWithString: who];
 
 		if ([components count] > 2)
-			reason = [line substringWithRange:
-			    OFRangeMake(pos + 2, line.length - pos - 2)];
+			reason = [line substringFromIndex: pos + 2];
 
 		for (OFString *channel in _channels)
 			[[_channels objectForKey: channel]
@@ -461,9 +450,8 @@
 		OFString *nickname = [components objectAtIndex: 2];
 		IRCUser *user;
 
-		who = [who substringWithRange: OFRangeMake(1, who.length - 1)];
-		nickname = [nickname substringWithRange:
-		    OFRangeMake(1, nickname.length - 1)];
+		who = [who substringFromIndex: 1];
+		nickname = [nickname substringFromIndex: 1];
 
 		user = [IRCUser IRCUserWithString: who];
 
@@ -497,10 +485,8 @@
 		size_t pos = from.length + 1 +
 		    [[components objectAtIndex: 1] length] + 1 + to.length;
 
-		from = [from substringWithRange:
-		    OFRangeMake(1, from.length - 1)];
-		message = [line substringWithRange:
-		    OFRangeMake(pos + 2, line.length - pos - 2)];
+		from = [from substringFromIndex: 1];
+		message = [line substringFromIndex: pos + 2];
 		user = [IRCUser IRCUserWithString: from];
 
 		if (![to isEqual: _nickname]) {
@@ -530,10 +516,8 @@
 		size_t pos = from.length + 1 +
 		    [[components objectAtIndex: 1] length] + 1 + to.length;
 
-		from = [from substringWithRange:
-		    OFRangeMake(1, from.length - 1)];
-		notice = [line substringWithRange:
-		    OFRangeMake(pos + 2, line.length - pos - 2)];
+		from = [from substringFromIndex: 1];
+		notice = [line substringFromIndex: pos + 2];
 
 		if (![from containsString: @"!"] || [to isEqual: @"*"]) {
 			/* System message - ignore for now */
