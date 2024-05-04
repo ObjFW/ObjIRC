@@ -38,7 +38,7 @@ OF_APPLICATION_DELEGATE(TestApp)
 {
 	IRCConnection *connection = [[IRCConnection alloc] init];
 
-	connection.server = @"irc.freenode.net";
+	connection.server = @"irc.oftc.net";
 	connection.nickname = @"ObjIRC";
 	connection.username = @"ObjIRC";
 	connection.realname = @"ObjIRC";
