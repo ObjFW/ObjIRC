@@ -1,7 +1,8 @@
 /*
- * Copyright (c) 2010, 2011, Jonathan Schleifer <js@webkeks.org>
+ * Copyright (c) 2010, 2011, 2012, 2013, 2016, 2017, 2018, 2021, 2024
+ *   Jonathan Schleifer <js@nil.im>
  *
- * https://webkeks.org/hg/objirc/
+ * https://fossil.nil.im/objirc
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
