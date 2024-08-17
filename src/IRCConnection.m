@@ -296,7 +296,7 @@
 		OFMutableSet *channel;
 
 		who = [who substringFromIndex: 1];
-		user = [IRCUser IRCUserWithString: who];
+		user = [IRCUser userWithString: who];
 
 		if ([who hasPrefix:
 		    [_nickname stringByAppendingString: @"!"]]) {
@@ -367,7 +367,7 @@
 		    [[components objectAtIndex: 1] length] + 1 + where.length;
 
 		who = [who substringFromIndex: 1];
-		user = [IRCUser IRCUserWithString: who];
+		user = [IRCUser userWithString: who];
 		channel = [_channels objectForKey: where];
 
 		if (components.count > 3)
@@ -398,7 +398,7 @@
 		    where.length + 1 + whom.length;
 
 		who = [who substringFromIndex: 1];
-		user = [IRCUser IRCUserWithString: who];
+		user = [IRCUser userWithString: who];
 		channel = [_channels objectForKey: where];
 
 		if (components.count > 4)
@@ -426,7 +426,7 @@
 		    [[components objectAtIndex: 1] length];
 
 		who = [who substringFromIndex: 1];
-		user = [IRCUser IRCUserWithString: who];
+		user = [IRCUser userWithString: who];
 
 		if ([components count] > 2)
 			reason = [line substringFromIndex: pos + 2];
@@ -453,7 +453,7 @@
 		who = [who substringFromIndex: 1];
 		nickname = [nickname substringFromIndex: 1];
 
-		user = [IRCUser IRCUserWithString: who];
+		user = [IRCUser userWithString: who];
 
 		if ([user.nickname isEqual: _nickname]) {
 			[_nickname release];
@@ -487,7 +487,7 @@
 
 		from = [from substringFromIndex: 1];
 		message = [line substringFromIndex: pos + 2];
-		user = [IRCUser IRCUserWithString: from];
+		user = [IRCUser userWithString: from];
 
 		if (![to isEqual: _nickname]) {
 			if ([_delegate respondsToSelector: @selector(connection:
@@ -524,7 +524,7 @@
 			return;
 		}
 
-		user = [IRCUser IRCUserWithString: from];
+		user = [IRCUser userWithString: from];
 
 		if (![to isEqual: _nickname]) {
 			if ([_delegate respondsToSelector: @selector(connection:

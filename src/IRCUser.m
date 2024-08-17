@@ -36,7 +36,7 @@
 @implementation IRCUser
 @synthesize username = _username, nickname = _nickname, hostname = _hostname;
 
-+ (instancetype)IRCUserWithString: (OFString *)string
++ (instancetype)userWithString: (OFString *)string
 {
 	return [[[self alloc] initWithString: string] autorelease];
 }

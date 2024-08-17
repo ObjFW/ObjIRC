@@ -32,7 +32,7 @@ OF_ASSUME_NONNULL_BEGIN
 
 @property (readonly, nonatomic) OFString *nickname, *username, *hostname;
 
-+ (instancetype)IRCUserWithString: (OFString *)string;
++ (instancetype)userWithString: (OFString *)string;
 - (instancetype)initWithString: (OFString *)string OF_DESIGNATED_INITIALIZER;
 @end
 
