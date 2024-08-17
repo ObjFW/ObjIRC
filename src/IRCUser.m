@@ -43,34 +43,28 @@
 
 - (instancetype)initWithString: (OFString *)string
 {
-	char *tmp2 = NULL;
-
 	self = [super init];
 
 	@try {
-		char *tmp;
+		size_t pos;
 
-		tmp2 = OFStrDup(string.UTF8String);
-
-		if ((tmp = strchr(tmp2, '@')) == NULL)
+		pos = [string rangeOfString: @"@"].location;
+		if (pos == OFNotFound)
 			@throw [OFInvalidFormatException exception];
 
-		*tmp = '\0';
-		_hostname = [[OFString alloc] initWithUTF8String: tmp + 1];
+		_hostname = [[string substringFromIndex: pos + 1] copy];
 
-		if ((tmp = strchr(tmp2, '!')) == NULL)
+		string = [string substringToIndex: pos];
+
+		pos = [string rangeOfString: @"!"].location;
+		if (pos == OFNotFound)
 			@throw [OFInvalidFormatException exception];
 
-		*tmp = '\0';
-		_username = [[OFString alloc] initWithUTF8String: tmp + 1];
-
-		_nickname = [[OFString alloc] initWithUTF8String: tmp2];
+		_username = [[string substringFromIndex: pos + 1] copy];
+		_nickname = [[string substringToIndex: pos] copy];
 	} @catch (id e) {
 		[self release];
 		@throw e;
-	} @finally {
-		if (tmp2 != NULL)
-			free(tmp2);
 	}
 
 	return self;
