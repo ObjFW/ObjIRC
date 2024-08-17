@@ -1,0 +1,5 @@
+package_format 1
+CPPFLAGS="$CPPFLAGS -I@includedir@"
+LIBS="-L@libdir@ -lobjirc $LIBS"
+FRAMEWORK_LIBS="-L@libdir@ -lobjirc $FRAMEWORK_LIBS"
+STATIC_LIBS="@libdir@/libobjirc.a $STATIC_LIBS"
